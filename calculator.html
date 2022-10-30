@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pocket Calculator</title>
+    <link rel="stylesheet" href="./public/calculator.css">
+</head>
+<body>
+    <aside>
+        <p class="prompt is-pulsing">Press "C" to crunch some numbers!</p>
+    </aside>
+    <main>
+        <h1 class="name">Calculotron 5000</h1>
+        <section class="screen is-inactive">
+            <p></p>
+        </section>
+        <section class="keypad">
+            <button id="+" class="button operator-btn is-inactive" value="+">+</button>
+            <button id="-" class="button operator-btn is-inactive" value="-">-</button>
+            <button id="x" class="button operator-btn is-inactive" value="x">X</button>
+            <button id="/"class="button operator-btn is-inactive" value="/">/</button>
+            <button id="1" class="button is-inactive" value="1">1</button>
+            <button id="2" class="button is-inactive" value="2">2</button>
+            <button id="3" class="button is-inactive" value="3">3</button>
+            <button id="=" class="button equals-btn is-inactive" value="=">=</button>
+            <button id="4" class="button is-inactive" value="4">4</button>
+            <button id="5" class="button is-inactive" value="5">5</button>
+            <button id="6" class="button is-inactive" value="6">6</button>
+            <button id="7" class="button is-inactive" value="7">7</button>
+            <button id="8" class="button is-inactive" value="8">8</button>
+            <button id="9" class="button is-inactive" value="9">9</button>
+            <button id="0" class="button is-inactive" value="0">0</button>
+            <button id="," class="button is-inactive" value=",">,</button>
+            <button id="c" class="button is-inactive">C</button>
+        </section>
+        <h2 class="author">ZombieCat</h2>
+    </main>
+    <audio id="btn-sound">
+        <source src="./public/sounds/button-click.wav" type="audio/wav">
+    </audio>
+    <audio id="operation-sound">
+        <source src="./public/sounds/result-obtained.wav" type="audio/wav">
+    </audio>
+    <audio id="off-sound">
+        <source src="./public/sounds/turn-off.mp3" type="audio/mp3">
+    </audio>
+    <audio id="on-sound">
+        <source src="./public/sounds/turn-on.wav" type="audio/wav">
+    </audio>
+
+    <script type="text/javascript" src="./src/calculator.js"></script>
+    <script type="text/javascript" src="./app.js"></script>
+</body>
+</html>
