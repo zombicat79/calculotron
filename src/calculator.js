@@ -12,9 +12,16 @@ class Calculator {
         this.toggleComponents = this.buttons.concat(this.screen);
     }
 
+    /* 
+    Arithmetic operations below (addValues, subtractValues, multiplyValues and divideValues) 
+    currently being performed by means of "big.js" library. Original raw operations suffering 
+    from decimal precision issue commented immediately below. 
+    */
+
     addValues() {
         this.normaliseDecimals("calculating");
-        let addition = Number(this.firstOperand) + Number(this.secondOperand);
+        let addition = new Big(this.firstOperand).plus(new Big(this.secondOperand));
+        // let addition = Number(this.firstOperand) + Number(this.secondOperand);
         addition = this.normaliseDecimals("printing", addition);
         this.printToScreen(addition);
         return addition;
@@ -22,7 +29,8 @@ class Calculator {
     
     subtractValues() {
         this.normaliseDecimals("calculating");
-        let subtraction = Number(this.firstOperand) - Number(this.secondOperand);
+        let subtraction = new Big(this.firstOperand).minus(new Big(this.secondOperand));
+        // let subtraction = Number(this.firstOperand) - Number(this.secondOperand);
         subtraction = this.normaliseDecimals("printing", subtraction);
         this.printToScreen(subtraction);
         return subtraction;
@@ -30,7 +38,8 @@ class Calculator {
 
     multiplyValues() {
         this.normaliseDecimals("calculating");
-        let multiplication = Number(this.firstOperand) * Number(this.secondOperand);
+        let multiplication = new Big(this.firstOperand).times(new Big(this.secondOperand));
+        // let multiplication = Number(this.firstOperand) * Number(this.secondOperand);
         multiplication = this.normaliseDecimals("printing", multiplication);
         this.printToScreen(multiplication);
         return multiplication;
@@ -38,7 +47,8 @@ class Calculator {
 
     divideValues() {
         this.normaliseDecimals("calculating");
-        let division = Number(this.firstOperand) / Number(this.secondOperand);
+        let division = new Big(this.firstOperand).div(new Big(this.secondOperand));
+        // let division = Number(this.firstOperand) / Number(this.secondOperand);
         division = this.normaliseDecimals("printing", division);
         this.printToScreen(division);
         return division;
