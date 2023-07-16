@@ -60,9 +60,19 @@ main {
     margin-left: 10%;
     background: linear-gradient(90deg, rgba(5,5,5,1) 40%, rgba(91,93,92,1) 100%);
 }
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+footer img {
+    height: 35px;
+    margin-right: 10px;
+}
 
 aside {
-    min-width: 550px;
+    width: 550px;
 }
 
 .prompt {
@@ -89,7 +99,6 @@ aside {
 }
 .author {
     text-align: center;
-    margin-top: 20px;
 }
 
 .screen {
@@ -149,28 +158,32 @@ aside {
     padding: 120px 20px;
     background-color: #438838;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1100px) {
     body {
         flex-direction: column;
-        background-image: unset;
     }
 
     main {
         margin-left: 0;
         width: 250px;
-        padding: 20px 40px;
+        padding: 25px 40px;
     }
 
     aside {
-        min-width: unset;
+        width: unset;
     }
 
     .prompt {
-        margin: 30px 0;
+        margin: 15px;
         font-size: 18px;
     }
 
-    .author {
-        margin-top: 12px;
+    .keypad {
+        height: 68%;
+    }
+}
+@media screen and (max-width: 768px) {
+    body {
+        background-image: unset;
     }
 }

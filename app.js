@@ -7,10 +7,13 @@ function pressButton(event) {
     } else {
         clickedButton = event.target;
     }
-    clickedButton.classList.toggle('is-clicked');
-    setTimeout(function() {
+
+    if (clickedButton) {
         clickedButton.classList.toggle('is-clicked');
-    }, 500);
+        setTimeout(function() {
+            clickedButton.classList.toggle('is-clicked');
+        }, 500);
+    }
 }
 
 let btnClickedRepeatedly = false;
@@ -45,7 +48,7 @@ function manageBtnPress(mouseOrigin, keyboardOrigin) {
                 calculator.printToScreen(document.getElementById(eventOrigin.key).value);
             }
             break;
-        case eventOrigin.id === '=' || eventOrigin.key === "=":
+        case eventOrigin.id === '=' || eventOrigin.key === "=" || eventOrigin.key === "Enter":
             if (calculator.operator === "+") {
                 calculator.firstOperand = calculator.addValues();
             }
@@ -182,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.addEventListener('keydown', function(event) {
+        console.log(event)
         switch(true) {
             case event.key === 'c':
                 if (calculator.activated === false) {
@@ -211,6 +215,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("btn-sound").play();
                 removeCharacter(calculator.calculationStep);
                 break;
+            case event.key === 'Enter':
+                if (calculator.activated === true && calculator.calculationStep === 2) {
+                    manageBtnPress(null, event)
+                    break;
+                }
             default:
                 if (calculator.activated === true) {
                     if (event.key.length === 1) {

@@ -22,6 +22,7 @@ class Calculator {
         this.normaliseDecimals("calculating");
         let addition = new Big(this.firstOperand).plus(new Big(this.secondOperand));
         // let addition = Number(this.firstOperand) + Number(this.secondOperand);
+        addition = new Big(addition.round(3, Big.roundHalfUp));
         addition = this.normaliseDecimals("printing", addition);
         this.printToScreen(addition);
         return addition;
@@ -31,6 +32,7 @@ class Calculator {
         this.normaliseDecimals("calculating");
         let subtraction = new Big(this.firstOperand).minus(new Big(this.secondOperand));
         // let subtraction = Number(this.firstOperand) - Number(this.secondOperand);
+        subtraction = new Big(subtraction.round(3, Big.roundHalfUp));
         subtraction = this.normaliseDecimals("printing", subtraction);
         this.printToScreen(subtraction);
         return subtraction;
@@ -40,6 +42,7 @@ class Calculator {
         this.normaliseDecimals("calculating");
         let multiplication = new Big(this.firstOperand).times(new Big(this.secondOperand));
         // let multiplication = Number(this.firstOperand) * Number(this.secondOperand);
+        multiplication = new Big(multiplication.round(3, Big.roundHalfUp));
         multiplication = this.normaliseDecimals("printing", multiplication);
         this.printToScreen(multiplication);
         return multiplication;
@@ -49,6 +52,7 @@ class Calculator {
         this.normaliseDecimals("calculating");
         let division = new Big(this.firstOperand).div(new Big(this.secondOperand));
         // let division = Number(this.firstOperand) / Number(this.secondOperand);
+        division = new Big(division.round(3, Big.roundHalfUp));
         division = this.normaliseDecimals("printing", division);
         this.printToScreen(division);
         return division;
