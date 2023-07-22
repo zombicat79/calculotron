@@ -5,6 +5,7 @@ class Calculator {
         this.firstOperand = "";
         this.operator = "";
         this.secondOperand = "";
+        this.digitRemovalAllowed = true;
         this.subsequentOperation = false;
         this.buttons = Array.from(document.getElementsByClassName("button"));
         this.screen = document.querySelector('.screen');
@@ -93,6 +94,7 @@ class Calculator {
         this.secondOperand = "";
         this.calculationStep = 1;
         this.subsequentOperation = false;
+        this.digitRemovalAllowed = true;
     }
 
     normaliseDecimals(operation, value) {

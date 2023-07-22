@@ -1,6 +1,7 @@
 const calculator = new Calculator;
 
 function pressButton(event) {
+    console.log(calculator)
     let clickedButton;
     if (event.type === "keydown" && event.key.length === 1) {
         clickedButton = document.getElementById(event.key);
@@ -8,10 +9,22 @@ function pressButton(event) {
         clickedButton = event.target;
     }
 
+    const operators = ["+", "-", "x", "/"];
+
     if (clickedButton) {
         clickedButton.classList.toggle('is-clicked');
+        if (calculator.calculationStep === 1 && calculator.subsequentOperation && !(operators.includes(clickedButton.id))) {
+            clickedButton.classList.add('is-wrong');
+        }
+        if (clickedButton.id === "=" && calculator.calculationStep !== 2) {
+            clickedButton.classList.add('is-wrong');
+        }
+        if (clickedButton.id === "=" && calculator.operator && !calculator.secondOperand) {
+            clickedButton.classList.add('is-wrong');
+        }
         setTimeout(function() {
             clickedButton.classList.toggle('is-clicked');
+            clickedButton.classList.remove('is-wrong');
         }, 500);
     }
 }
@@ -23,7 +36,6 @@ let countId = null;
 function increaseHoldCount() {
     countId = setInterval(function() {
         resetBtnHold += 1;
-        console.log(resetBtnHold)
     }, 1000)
 }
 
@@ -40,6 +52,7 @@ function manageBtnPress(mouseOrigin, keyboardOrigin) {
         case operators.includes(eventOrigin.id) || operators.includes(eventOrigin.key):
             calculator.subsequentOperation = true;
             calculator.calculationStep = 2;
+            calculator.digitRemovalAllowed = true;
             if (eventOrigin === mouseOrigin) {
                 calculator.operator = eventOrigin.value;
                 calculator.printToScreen(eventOrigin.value);
@@ -49,21 +62,26 @@ function manageBtnPress(mouseOrigin, keyboardOrigin) {
             }
             break;
         case eventOrigin.id === '=' || eventOrigin.key === "=" || eventOrigin.key === "Enter":
-            if (calculator.operator === "+") {
-                calculator.firstOperand = calculator.addValues();
+            if (calculator.calculationStep === 2 && calculator.firstOperand && calculator.secondOperand) {
+                if (calculator.operator === "+") {
+                    calculator.firstOperand = calculator.addValues();
+                }
+                else if (calculator.operator === "-") {
+                    calculator.firstOperand = calculator.subtractValues();
+                }
+                else if (calculator.operator === "x") {
+                    calculator.firstOperand = calculator.multiplyValues();
+                }
+                else {
+                    calculator.firstOperand = calculator.divideValues();
+                }
+                document.getElementById("operation-sound").play();
+                calculator.secondOperand = "";
+                calculator.calculationStep = 1;
+                if (calculator.subsequentOperation) {
+                    calculator.digitRemovalAllowed = false;
+                }
             }
-            else if (calculator.operator === "-") {
-                calculator.firstOperand = calculator.subtractValues();
-            }
-            else if (calculator.operator === "x") {
-                calculator.firstOperand = calculator.multiplyValues();
-            }
-            else {
-                calculator.firstOperand = calculator.divideValues();
-            }
-            document.getElementById("operation-sound").play();
-            calculator.secondOperand = "";
-            calculator.calculationStep = 1;
             break;
         default:
             let activeOperand;
@@ -98,11 +116,11 @@ function composeString(value) {
 
 function removeCharacter(step) {
     if (step === 1 && calculator.firstOperand.length > 0) {
-        calculator.firstOperand = calculator.firstOperand.substring(1);
+        calculator.firstOperand = calculator.firstOperand.substring(0, calculator.firstOperand.length-1);
         calculator.printToScreen(calculator.firstOperand);
     }
     if (step === 2 && calculator.secondOperand.length > 0) {
-        calculator.secondOperand = calculator.secondOperand.substring(1);
+        calculator.secondOperand = calculator.secondOperand.substring(0, calculator.secondOperand.length-1);
         calculator.printToScreen(calculator.secondOperand);
     }
 }
@@ -176,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
             default:
                 item.addEventListener('click', function(event) {
-                    if (calculator.activated === true) {
+                    if (calculator.activated === true && event.pointerType === "mouse") {
                         pressButton(event);
                         manageBtnPress(item, null);
                     }    
@@ -185,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.addEventListener('keydown', function(event) {
-        console.log(event)
         switch(true) {
             case event.key === 'c':
                 if (calculator.activated === false) {
@@ -212,16 +229,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 break;
             case event.key === 'Backspace':
-                document.getElementById("btn-sound").play();
-                removeCharacter(calculator.calculationStep);
+                    if (calculator.digitRemovalAllowed) {
+                        document.getElementById("btn-sound").play();
+                        removeCharacter(calculator.calculationStep);
+                    }
                 break;
             case event.key === 'Enter':
-                if (calculator.activated === true && calculator.calculationStep === 2) {
+                if (calculator.activated === true && calculator.calculationStep === 2 && calculator.secondOperand) {
                     manageBtnPress(null, event)
                     break;
                 }
             default:
-                if (calculator.activated === true) {
+                let keyInKeypad = false;
+                for (let i=0; i < calculator.buttons.length; i++) {
+                    if (calculator.buttons[i].id === event.key) {
+                        keyInKeypad = true;
+                        break;
+                    }
+                } 
+
+                if (calculator.activated === true && keyInKeypad) {
                     if (event.key.length === 1) {
                         pressButton(event);
                         manageBtnPress(null, event);
