@@ -131,6 +131,7 @@ aside {
 }
 .button {
     background-color: lightgray;
+    color: black;
     border-radius: 5px;
     font-family: 'Source-Medium';
     text-align: center;
@@ -189,5 +190,96 @@ aside {
 @media screen and (max-width: 768px) {
     body {
         background-image: unset;
+    }
+}
+
+/* ZOMBIECAT BRANDING PACK */
+#alert-screen {
+    display: none;
+}
+
+.branding-pack {
+    width: fit-content;
+    text-align: center;
+}
+.branding-pack--calc {
+    display: flex;
+    align-items: center;
+}
+.branding-pack:link, 
+.branding-pack:visited, 
+.branding-pack:active, 
+.branding-pack:hover {
+    text-decoration: none;
+    color: white;
+}
+.branding-pack:hover {
+    cursor: pointer;
+}
+.branding-pack--intro {
+    position: relative;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 150px;
+}
+.branding-pack--cover, 
+.branding-pack--end {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+}
+.branding-pack--end {
+    z-index: 999;
+}
+
+.branding-heading {
+    font-family: "Russo-Regular";
+    font-size: 25px;
+    margin: 0;
+}
+.branding-heading--calc {
+    font-size: 15px;
+}
+.branding-pack:hover .branding-heading {
+    text-shadow: 3px 1px 20px white, -3px -1px 20px white;
+}
+.branding-pack--cover .branding-heading, 
+.branding-pack--end .branding-heading {
+    font-size: 16px;
+}
+
+.branding-img {
+    width: 50px;
+}
+.branding-pack--alert .branding-img {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@media screen and (max-width: 768px) {
+    .main-content {
+        display: none;
+    }
+    
+    #alert-screen {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: fit-content;
+        transform: translate(-50%, -50%);
+    }
+
+    #alert-screen .alert-text {
+        font-size: 20px;
+        font-family: "Russo-Regular"; 
+        color: white;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    #alert-screen .alert-text:nth-child(2) {
+        margin-bottom: 40px;
     }
 }

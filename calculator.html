@@ -4,14 +4,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pocket Calculator</title>
+    <title>Calculotron 5000</title>
+    <link rel="icon" href="./zombiecat.ico" sizes="16x16 32x32 48x48 64x64 80x80 96x96 112x112 128x128">
+    <link rel="apple-touch-icon" href="./logo192.png" />
     <link rel="stylesheet" href="./public/calculator.css">
+    <meta name="description" content="A web based pocket calculator to perform daily operations">
+    <link rel="manifest" href="./manifest.json" />
 </head>
 <body>
-    <aside>
+    <aside id="alert-screen">
+        <p class="alert-text">This site is not available for mobile devices.</p>
+        <p class="alert-text">Please use a desktop computer to access its content.</p>
+
+        <a href="https://zombiecat.dev/" target="_blank" class="branding-pack branding-pack--alert">
+            <h1 class="branding-heading">Zombiecat</h1>
+            <img class="branding-img" src="./public/images/zombiecat-trans-logo.png" alt="ZombieCat logo">
+        </a>
+    </aside>
+
+    <aside class="main-content">
         <p class="prompt is-pulsing">Press "C" to crunch some numbers!</p>
     </aside>
-    <main>
+    <main class="main-content">
         <header>
             <h1 class="name">Calculotron 5000</h1>
         </header>
@@ -38,8 +52,10 @@
             <button id="c" class="button is-inactive">C</button>
         </section>
         <footer>
-            <img src="./public/images/logo192.png" alt="ZombieCat logo" />
-            <h2 class="author">ZombieCat</h2>
+            <a href="https://zombiecat.dev/" target="_blank" class="branding-pack branding-pack--calc">
+                <img src="./public/images/zombiecat-trans-logo.png" alt="ZombieCat logo" />
+                <h2 class="author branding-heading branding-heading--calc">ZombieCat</h2>
+            </a>
         </footer>
     </main>
     <audio id="btn-sound">

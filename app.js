@@ -1,10 +1,13 @@
 const calculator = new Calculator;
 
 function pressButton(event) {
-    console.log(calculator)
     let clickedButton;
     if (event.type === "keydown" && event.key.length === 1) {
-        clickedButton = document.getElementById(event.key);
+        if (event.key === "=" || event.key === "Enter") {
+            clickedButton = document.getElementById("=");
+        } else {
+            clickedButton = document.getElementById(event.key);
+        }
     } else {
         clickedButton = event.target;
     }
@@ -13,6 +16,12 @@ function pressButton(event) {
 
     if (clickedButton) {
         clickedButton.classList.toggle('is-clicked');
+        if (operators.includes(clickedButton.id) && !calculator.firstOperand) {
+            clickedButton.classList.add('is-wrong');
+        }
+        if (operators.includes(clickedButton.id) && calculator.firstOperand && calculator.operator) {
+            clickedButton.classList.add('is-wrong');
+        }
         if (calculator.calculationStep === 1 && calculator.subsequentOperation && !(operators.includes(clickedButton.id))) {
             clickedButton.classList.add('is-wrong');
         }
@@ -36,7 +45,7 @@ let countId = null;
 function increaseHoldCount() {
     countId = setInterval(function() {
         resetBtnHold += 1;
-    }, 1000)
+    }, 500)
 }
 
 function stopHoldCount() {
@@ -49,16 +58,18 @@ function manageBtnPress(mouseOrigin, keyboardOrigin) {
 
     document.getElementById("btn-sound").play();
     switch(true) {
-        case operators.includes(eventOrigin.id) || operators.includes(eventOrigin.key):
-            calculator.subsequentOperation = true;
-            calculator.calculationStep = 2;
-            calculator.digitRemovalAllowed = true;
-            if (eventOrigin === mouseOrigin) {
-                calculator.operator = eventOrigin.value;
-                calculator.printToScreen(eventOrigin.value);
-            } else {
-                calculator.operator = document.getElementById(eventOrigin.key).value;
-                calculator.printToScreen(document.getElementById(eventOrigin.key).value);
+        case operators.includes(eventOrigin.id) || operators.includes(eventOrigin.key) :
+            if (calculator.firstOperand && !calculator.operator) {
+                calculator.subsequentOperation = true;
+                calculator.calculationStep = 2;
+                calculator.digitRemovalAllowed = true;
+                if (eventOrigin === mouseOrigin) {
+                    calculator.operator = eventOrigin.value;
+                    calculator.printToScreen(eventOrigin.value);
+                } else {
+                    calculator.operator = document.getElementById(eventOrigin.key).value;
+                    calculator.printToScreen(document.getElementById(eventOrigin.key).value);
+                }
             }
             break;
         case eventOrigin.id === '=' || eventOrigin.key === "=" || eventOrigin.key === "Enter":
@@ -118,10 +129,16 @@ function removeCharacter(step) {
     if (step === 1 && calculator.firstOperand.length > 0) {
         calculator.firstOperand = calculator.firstOperand.substring(0, calculator.firstOperand.length-1);
         calculator.printToScreen(calculator.firstOperand);
+        if (calculator.firstOperand === "") {
+            calculator.printToScreen("0");
+        }
     }
     if (step === 2 && calculator.secondOperand.length > 0) {
         calculator.secondOperand = calculator.secondOperand.substring(0, calculator.secondOperand.length-1);
         calculator.printToScreen(calculator.secondOperand);
+        if (calculator.secondOperand === "") {
+            calculator.printToScreen("0");
+        }
     }
 }
 
@@ -169,11 +186,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 break;
             case item.id === '-' || item.id === '+':
-                item.addEventListener('mousedown', function() {
+                item.addEventListener('mousedown', function(event) {
                     if (calculator.activated === true) {
                         if (resetBtnHold === 0) {
                             increaseHoldCount();
-                            item.classList.toggle('is-clicked');
+                            pressButton(event);
+                            // item.classList.toggle('is-clicked');
+                        }
+                    }
+                })
+                item.addEventListener('mouseup', function() {
+                    if (calculator.activated === true) {
+                        stopHoldCount();
+                        if (resetBtnHold >= 1 && calculator.firstOperand) {
+                            const pressedBtn = item.id === '-' ? '-' : '+';
+                            calculator.toggleNumberSign(pressedBtn);
+                        } else {
+                            manageBtnPress(item, null);
+                            document.getElementById("btn-sound").play();
+                        }
+                        // item.classList.remove('is-clicked');
+                        resetBtnHold = 0;
+                    }
+                })
+                break;
+            case item.id === '0':
+                item.addEventListener('mousedown', function(event) {
+                    if (calculator.activated === true) {
+                        if (resetBtnHold === 0) {
+                            increaseHoldCount();
+                            pressButton(event);
+                            // item.classList.toggle('is-clicked');
                         }
                     }
                 })
@@ -181,13 +224,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (calculator.activated === true) {
                         stopHoldCount();
                         if (resetBtnHold >= 1) {
-                            const pressedBtn = item.id === '-' ? '-' : '+';
-                            calculator.toggleNumberSign(pressedBtn);
+                            if (calculator.secondOperand) {
+                                removeCharacter(2);
+                            } else {
+                                removeCharacter(1);
+                            }
                         } else {
                             manageBtnPress(item, null);
                             document.getElementById("btn-sound").play();
                         }
-                        item.classList.remove('is-clicked');
+                        // item.classList.remove('is-clicked');
                         resetBtnHold = 0;
                     }
                 })
@@ -223,7 +269,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (calculator.activated === true) {
                     if (resetBtnHold === 0 && btnClickedRepeatedly === false) {
                         increaseHoldCount();
-                        document.getElementById(event.key).classList.toggle('is-clicked');
+                        pressButton(event);
+                        // document.getElementById(event.key).classList.toggle('is-clicked');
                         btnClickedRepeatedly = true;
                     }
                 }
@@ -235,6 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 break;
             case event.key === 'Enter':
+                pressButton(event);
                 if (calculator.activated === true && calculator.calculationStep === 2 && calculator.secondOperand) {
                     manageBtnPress(null, event)
                     break;
@@ -276,14 +324,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.key === '-' || event.key === '+') {
             if (calculator.activated === true) {
                 stopHoldCount();
-                if (resetBtnHold >= 1) {
+                if (resetBtnHold >= 1 && calculator.firstOperand) {
                     const pressedBtn = event.key === '-' ? '-' : '+';
                     calculator.toggleNumberSign(pressedBtn);
                 } else {
                     manageBtnPress(null, event);
                     document.getElementById("btn-sound").play();
                 }
-                document.getElementById(event.key).classList.remove('is-clicked');
+                // document.getElementById(event.key).classList.remove('is-clicked');
                 resetBtnHold = 0;
                 btnClickedRepeatedly = false;
             }

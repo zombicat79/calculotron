@@ -26,6 +26,7 @@ class Calculator {
         addition = new Big(addition.round(3, Big.roundHalfUp));
         addition = this.normaliseDecimals("printing", addition);
         this.printToScreen(addition);
+        this.operator = "";
         return addition;
     }
     
@@ -36,6 +37,7 @@ class Calculator {
         subtraction = new Big(subtraction.round(3, Big.roundHalfUp));
         subtraction = this.normaliseDecimals("printing", subtraction);
         this.printToScreen(subtraction);
+        this.operator = "";
         return subtraction;
     }
 
@@ -46,6 +48,7 @@ class Calculator {
         multiplication = new Big(multiplication.round(3, Big.roundHalfUp));
         multiplication = this.normaliseDecimals("printing", multiplication);
         this.printToScreen(multiplication);
+        this.operator = "";
         return multiplication;
     }
 
@@ -56,6 +59,7 @@ class Calculator {
         division = new Big(division.round(3, Big.roundHalfUp));
         division = this.normaliseDecimals("printing", division);
         this.printToScreen(division);
+        this.operator = "";
         return division;
     }
 
@@ -121,7 +125,11 @@ class Calculator {
         this.printToScreen("0");
         this.activated = true;
         this.prompt.classList.toggle("is-pulsing");
-        this.prompt.innerHTML = 'Long press "C" to log off <br> Long press "-" or "+" to change number sign';
+        this.prompt.innerHTML = `
+            \u2022 Long press/click "C" to log off <br> 
+            \u2022 Long press/click "-" or "+" to change number sign <br> 
+            \u2022 Press "Backspace" or long click "0" to delete undesired number
+        `;
     }
 
     turnOff() {
