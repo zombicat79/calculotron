@@ -1,10 +1,14 @@
-const calculator = new Calculator;
+const calculator = new Calculator();
 
 function pressButton(event) {
     let clickedButton;
-    if (event.type === "keydown" && event.key.length === 1) {
+    if (event.type === "keydown" && event.key.length > 0) {
         if (event.key === "=" || event.key === "Enter") {
             clickedButton = document.getElementById("=");
+        } else if (event.key === "C") {
+            clickedButton = document.getElementById("c");
+        } else if (event.key === "X") {
+            clickedButton = document.getElementById("x");
         } else {
             clickedButton = document.getElementById(event.key);
         }
@@ -12,14 +16,14 @@ function pressButton(event) {
         clickedButton = event.target;
     }
 
-    const operators = ["+", "-", "x", "/"];
+    const operators = ["+", "-", "X", "x", "/"];
 
     if (clickedButton) {
-        clickedButton.classList.toggle('is-clicked');
+        clickedButton.classList.add('is-clicked');
         if (operators.includes(clickedButton.id) && !calculator.firstOperand) {
             clickedButton.classList.add('is-wrong');
         }
-        if (operators.includes(clickedButton.id) && calculator.firstOperand && calculator.operator) {
+        if (operators.includes(clickedButton.id) && calculator.firstOperand && calculator.secondOperand) {
             clickedButton.classList.add('is-wrong');
         }
         if (calculator.calculationStep === 1 && calculator.subsequentOperation && !(operators.includes(clickedButton.id))) {
@@ -32,7 +36,7 @@ function pressButton(event) {
             clickedButton.classList.add('is-wrong');
         }
         setTimeout(function() {
-            clickedButton.classList.toggle('is-clicked');
+            clickedButton.classList.remove('is-clicked');
             clickedButton.classList.remove('is-wrong');
         }, 500);
     }
@@ -53,13 +57,13 @@ function stopHoldCount() {
 }
 
 function manageBtnPress(mouseOrigin, keyboardOrigin) {
-    const operators = ["+", "-", "x", "/"];
+    const operators = ["+", "-", "x", "X", "/"];
     const eventOrigin = mouseOrigin || keyboardOrigin;
 
     document.getElementById("btn-sound").play();
     switch(true) {
         case operators.includes(eventOrigin.id) || operators.includes(eventOrigin.key) :
-            if (calculator.firstOperand && !calculator.operator) {
+            if (calculator.firstOperand && !calculator.secondOperand) {
                 calculator.subsequentOperation = true;
                 calculator.calculationStep = 2;
                 calculator.digitRemovalAllowed = true;
@@ -67,8 +71,13 @@ function manageBtnPress(mouseOrigin, keyboardOrigin) {
                     calculator.operator = eventOrigin.value;
                     calculator.printToScreen(eventOrigin.value);
                 } else {
-                    calculator.operator = document.getElementById(eventOrigin.key).value;
-                    calculator.printToScreen(document.getElementById(eventOrigin.key).value);
+                    if (eventOrigin.key === "X") {
+                        calculator.operator = document.getElementById("x").value;
+                        calculator.printToScreen(document.getElementById("x").value);
+                    } else {
+                        calculator.operator = document.getElementById(eventOrigin.key).value;
+                        calculator.printToScreen(document.getElementById(eventOrigin.key).value);
+                    }
                 }
             }
             break;
@@ -80,7 +89,7 @@ function manageBtnPress(mouseOrigin, keyboardOrigin) {
                 else if (calculator.operator === "-") {
                     calculator.firstOperand = calculator.subtractValues();
                 }
-                else if (calculator.operator === "x") {
+                else if (calculator.operator === "x" || calculator.operator === "X") {
                     calculator.firstOperand = calculator.multiplyValues();
                 }
                 else {
@@ -191,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (resetBtnHold === 0) {
                             increaseHoldCount();
                             pressButton(event);
-                            // item.classList.toggle('is-clicked');
                         }
                     }
                 })
@@ -205,7 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             manageBtnPress(item, null);
                             document.getElementById("btn-sound").play();
                         }
-                        // item.classList.remove('is-clicked');
                         resetBtnHold = 0;
                     }
                 })
@@ -216,7 +223,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (resetBtnHold === 0) {
                             increaseHoldCount();
                             pressButton(event);
-                            // item.classList.toggle('is-clicked');
                         }
                     }
                 })
@@ -233,7 +239,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             manageBtnPress(item, null);
                             document.getElementById("btn-sound").play();
                         }
-                        // item.classList.remove('is-clicked');
                         resetBtnHold = 0;
                     }
                 })
@@ -250,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.addEventListener('keydown', function(event) {
         switch(true) {
-            case event.key === 'c':
+            case event.key === 'c' || event.key === 'C':
                 if (calculator.activated === false) {
                     setTimeout(() => {
                         pressButton(event)
@@ -260,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     if (resetBtnHold === 0 && btnClickedRepeatedly === false) {
                         increaseHoldCount();
-                        document.getElementById(event.key).classList.toggle('is-clicked');
+                        document.getElementById("c").classList.toggle('is-clicked');
                         btnClickedRepeatedly = true;
                     }
                 }
@@ -270,7 +275,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (resetBtnHold === 0 && btnClickedRepeatedly === false) {
                         increaseHoldCount();
                         pressButton(event);
-                        // document.getElementById(event.key).classList.toggle('is-clicked');
                         btnClickedRepeatedly = true;
                     }
                 }
@@ -296,8 +300,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 } 
 
-                if (calculator.activated === true && keyInKeypad) {
-                    if (event.key.length === 1) {
+                if ((calculator.activated === true && keyInKeypad) || event.key === "X") {
+                    if (event.key.length > 0) {
                         pressButton(event);
                         manageBtnPress(null, event);
                     }
@@ -306,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.addEventListener('keyup', function(event) {
-        if (event.key === 'c') {
+        if (event.key === 'c' || event.key === 'C') {
             if (calculator.activated === true) {
                 stopHoldCount();
                 if (resetBtnHold >= 1) {
@@ -316,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     calculator.printToScreen("0");
                     document.getElementById("btn-sound").play();
                 }
-                document.getElementById(event.key).classList.remove('is-clicked');
+                document.getElementById("c").classList.remove('is-clicked');
                 resetBtnHold = 0;
                 btnClickedRepeatedly = false;
             }
@@ -331,7 +335,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     manageBtnPress(null, event);
                     document.getElementById("btn-sound").play();
                 }
-                // document.getElementById(event.key).classList.remove('is-clicked');
                 resetBtnHold = 0;
                 btnClickedRepeatedly = false;
             }
